@@ -1,0 +1,19 @@
+---
+- hosts: ip-172-31-22-34.us-east-2.compute.internal
+  become: yes
+  tasks:
+  -  name: update packages on ubuntu & install apache2
+     command: "{{ item }}"
+     with_items:
+     - yum update -y
+     - yum upgrade -y
+     when: ansible_os_family == "CentOS"
+  
+- hosts: localhost
+  become: yes
+  tasks:
+  -  name: update packages on ubuntu & install apache2
+     apt:
+       update_cache: yes
+     when: ansible_os_family == "Debian"
+

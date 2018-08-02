@@ -1,0 +1,11 @@
+- hosts: localhost
+  become: yes
+  tasks:
+  - name: file creation
+    copy:
+     content: ""
+     dest: /var/www/html/info.php
+     force: no
+     group: sys
+     owner: root
+     mode: 0555

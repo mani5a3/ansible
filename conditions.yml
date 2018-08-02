@@ -1,0 +1,11 @@
+- hosts: all
+  become: yes
+  tasks:
+  - name: installing apache
+    when: ansible_os_family == "Debian"
+    package:
+    - name: apache2
+      state: present
+  - name: installing httpd
+    when: ansible_os_family == "CentOS"
+ 

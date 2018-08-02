@@ -1,0 +1,9 @@
+- hosts: all
+  become: yes #root permissions
+  tasks:
+  - name: instaling packages 
+    package:
+     name:
+      - unzip
+      - tree   
+      - git

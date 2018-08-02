@@ -1,0 +1,9 @@
+- hosts: localhost
+  become: yes
+  tasks:
+  -  name: update packages on ubuntu & install tomcat
+     command: "{{ item }}"
+     with_items:
+     - "add-apt-repository -y  ppa:webupd8team/java"
+     - "apt-get update"
+     - "apt-get install -y  oracle-java8-installer"
