@@ -20,3 +20,11 @@
       - oracle-java8-installer
       - ca-certificates
       - oracle-java8-set-default
+  - name: java path setting
+    lineinfile:
+      path: /etc/environment
+      line: 'JAVA_HOME="/usr/lib/jvm/java-8-oracle"'
+  - name: java bin path
+    lineinfile:
+      path: /etc/environment
+      line: 'PATH=${PATH}:${JAVA_HOME}/bin'
