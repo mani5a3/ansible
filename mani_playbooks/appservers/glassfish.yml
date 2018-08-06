@@ -1,0 +1,17 @@
+- hosts: localhost
+  become: yes
+  tasks:
+  - name: instaling packages
+    package:
+     name:
+      - unzip
+  - name: download installing glass-fish
+    get_url:
+      url: "http://download.java.net/glassfish/4.1.1/release/glassfish-4.1.1.zip"  
+      dest: /opt
+  - name: extracting the glass-fish zip
+    unarchive:
+      src: /opt/glassfish-4.1.1.zip
+      dest: /opt
+
+
