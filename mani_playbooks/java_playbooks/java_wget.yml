@@ -1,0 +1,23 @@
+
+- hosts: localhost
+  become: yes
+  tasks:
+  - name: Download file and force basic auth
+    get_url:
+      url: http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.tar.gz
+      headers: 'Cookie:oraclelicense=accept-securebackup-cookie'
+      dest: /opt
+  - name: Unarchive java file 
+    unarchive:
+      src: /opt/jdk-8u181-linux-x64.tar.gz
+      dest: /opt
+  - name: java varible setting
+    command: "{{ item }}"
+    with_items: 
+    - 'update-alternatives --install "/usr/bin/java" "java" "/opt/jdk1.8.0_181/bin/java" 1'
+    - 'update-alternatives --install "/usr/bin/javac" "javac" "/opt/jdk1.8.0_181/bin/javac" 1'
+    - 'update-alternatives --install "/usr/bin/javaws" "javaws" "/opt/jdk1.8.0_181/bin/javaws" 1'
+  - name: java path setting
+    lineinfile:
+      path: /etc/environment
+      line: 'JAVA_HOME="/opt/jdk1.8.0_181"'
