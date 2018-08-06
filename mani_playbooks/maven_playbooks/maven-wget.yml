@@ -1,0 +1,20 @@
+
+- hosts: localhost
+  become: yes
+  tasks:
+  - name: installing unzip
+    package:
+     name:
+      - unzip
+  - name: instaling maven via wget
+    get_url:
+     url: 'http://www-us.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.zip'
+     dest: /opt
+  - name: extracting the zip file
+    unarchive:
+     src: /opt/apache-maven-3.5.4-bin.zip
+     dest: /opt
+  - name: setting maven path
+    lineinfile:
+     path: /etc/environment
+     line: 'M2_HOME=/opt/apache-maven-3.5.4' 
