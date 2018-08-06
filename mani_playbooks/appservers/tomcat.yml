@@ -5,5 +5,3 @@
     apt: 
      name: tomcat7
      state: present
-  - name: tomcat user setting
-    command: 'wget https://github.com/mani5a3/ansible/blob/master/tomcat-users.xml /etc/tomcat7/'
