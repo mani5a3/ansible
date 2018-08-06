@@ -1,0 +1,12 @@
+
+- hosts: localhost
+  become: yes
+  tasks:
+  - name: installing maven via apt
+    apt:
+     name: maven
+     state: present 
+  - name: maven home path setting
+    lineinfile:
+      path: /etc/environment
+      line: 'M2_HOME="/usr/share/maven"'
