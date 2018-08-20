@@ -1,0 +1,47 @@
+node {
+  stage('SCM') {
+    git 'https://github.com/spring-petclinic/spring-petclinic-angularjs.git'
+  }
+  stage('SonarQube analysis') {
+    withSonarQubeEnv('sonar') {
+      sh 'mvn package sonar:sonar'
+    } // SonarQube taskId is automatically attached to the pipeline context
+  }
+}
+
+note: in fifth line, sonar is the name whaterver u  have given  in the sonarscanner in configuressystem in globaltoolmanagement
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+
+
+sonar and jenkins in windows
+
+node {
+   stage('git'){
+       git 'https://github.com/wakaleo/game-of-life.git'
+
+   }
+   stage('build&package'){
+       bat 'mvn package'
+   }
+   stage('test-reports')
+   {
+       junit('gameoflife-web/target/surefire-reports/*.xml')
+   }
+     stage('SonarQube analysis') {
+    withSonarQubeEnv('sonar') {
+      bat 'mvn package sonar:sonar'
+    }
+  }
+  
+   stage('archieve')
+   {
+       archiveArtifacts 'gameoflife-web/target/*.war'
+
+   }
+  
+  
+   
+}
