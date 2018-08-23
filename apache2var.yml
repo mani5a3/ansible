@@ -1,0 +1,38 @@
+---
+- hosts: localhost
+  become: yes
+  vars:
+   package_name: apache2
+  tasks:
+  -  name: update packages on ubuntu & install apache2
+     apt:
+       name: "{{ package_name }}"
+       update_cache: yes
+       state: present
+     tags: 
+        - mani
+
+- hosts: localhost
+  become: yes
+  vars:
+   package_name1: wget
+  tasks:
+  -  name: installing wget
+     apt:
+       name: "{{ package_name1 }}"
+       update_cache: yes
+       state: present
+     tags:
+        - mani
+- hosts: localhost
+  become: yes
+  vars:
+   package_name2: tree
+  tasks:
+  -  name: installing tree
+     apt:
+       name: "{{ package_name2 }}"
+       update_cache: yes
+       state: present
+     tags:
+        - mani  
