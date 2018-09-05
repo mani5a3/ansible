@@ -23,4 +23,4 @@
   - name: java path setting
     lineinfile:
       path: /etc/environment
-      line: 'JAVA_HOME="/usr/lib/jvm/java-8-oracle"'  
+      dest: 'JAVA_HOME="/usr/lib/jvm/java-8-oracle"'  
