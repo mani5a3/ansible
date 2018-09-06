@@ -17,4 +17,4 @@
   - name: setting maven path
     lineinfile:
      path: /etc/environment
-     line: 'M2_HOME=/opt/apache-maven-3.5.4' 
+     line: 'M2_HOME="/opt/apache-maven-3.5.4"' 
