@@ -43,3 +43,38 @@ node {
   
    
 }
+
+
+________________________________________________________________________________
+node {
+   stage('git'){
+       git 'https://github.com/mani5a3/spring-petclinic.git'
+
+   }
+   
+    stage('build&package')
+   {
+    sh 'mvn package'
+   }
+ stage('SonarQube analysis') {
+         def scannerHome = tool 'sonarscanner';
+                    withSonarQubeEnv('sonarqube') {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                      '-Dsonar.projectKey=petclinic' +
+                                    '-Dsonar.sonar.projectName=petclinic' +
+                                    '-Dsonar.sonar.projectVersion=1.0' +
+                                '-Dsonar.sonar.login=admin' +
+                                 '-Dsonar.sonar.password=admin' +
+                                 '-Dsonar.sonar.host.url=http://192.168.33.11:9000' +
+                                  '-Dsonar.sonar.sources=/var/lib/jenkins/workspace/sonar'
+                                              }
+                               }
+
+                               
+
+}
+
+____________________________________________________________________________
+
+
+
