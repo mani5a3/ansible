@@ -77,4 +77,32 @@ node {
 ____________________________________________________________________________
 
 
+pipeline {
+agent any 
+stages {
+stage('git') {
+steps {
+git 'https://github.com/mani5a3/spring-petclinic.git'
+}
+}
+stage('build') {
+steps {
+   sh 'mvn package'
+}
+}
 
+stage('SonarQube analysis'){
+steps {
+
+withSonarQubeEnv('sonarqube') {
+    
+sh "/home/softwares/sonar-scanner-3.3.0.1492-linux/bin/sonar-scanner -Dproject.settings=sonar-project.properties"
+                                              }
+                               }
+}
+
+
+
+}
+
+}
