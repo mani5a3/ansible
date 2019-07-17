@@ -46,6 +46,8 @@ node {
 
 
 ________________________________________________________________________________
+jenkins pipeline with sonar properties defining in jenkins job
+
 node {
    stage('git'){
        git 'https://github.com/mani5a3/spring-petclinic.git'
@@ -75,7 +77,7 @@ node {
 }
 
 ____________________________________________________________________________
-
+jenkins pipeline with  jfrog and with sonar properties defining at repository level
 
 pipeline {
 agent any 
@@ -123,4 +125,25 @@ stage('jfrog'){
 
 }
 
+}
+
+-----------------------------------------------------------------------------
+jenkins pipeline with nexus 2.x version
+
+node {
+   stage('git'){
+       git 'https://github.com/mani5a3/spring-petclinic.git'
+
+   }
+   
+    stage('build&package')
+   {
+    bat 'mvn package'
+   }
+   
+   stage('artifacts')
+   {
+       nexusArtifactUploader artifacts: [[artifactId: 'spring-petclinic', classifier: '', file: 'target/spring-petclinic-2.0.0.BUILD-SNAPSHOT.jar', type: 'jar']], credentialsId: 'nexus2.14', groupId: 'org.springframework.samples', nexusUrl: 'localhost:8083/nexus', nexusVersion: 'nexus2', protocol: 'http', repository: 'snapshots', version: '2.0.0.BUILD-SNAPSHOT'
+       
+   }
 }
