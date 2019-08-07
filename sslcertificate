@@ -1,0 +1,5 @@
+ssl certifocate creation: openssl genrsa 2048 > my-aws-ssl.pem
+
+openssl req -new -x509 -nodes -sha256 -days 60 -key  my-aws-ssl.pem -outform PEM  -out my-ssl-certificate.pem
+
+aws acm import-certificate --certificate file://my-ssl-certificate.pem --private-key file://my-aws-ssl.pem --region us-east-1
