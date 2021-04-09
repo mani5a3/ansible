@@ -1,0 +1,10 @@
+This is used to build the maven project in gitlab and this file should be in project root folder
+stages:
+  - build 
+maven_build:
+  stage: build
+  tags:
+    - ci
+  script:
+    - echo maven build started
+    - mvn package
