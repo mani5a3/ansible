@@ -9,3 +9,5 @@ maven_build:
   script:
     - echo maven build started
     - mvn package
+  only:
+    - master
