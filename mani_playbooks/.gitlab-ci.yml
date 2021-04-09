@@ -3,6 +3,7 @@ stages:
   - build 
 maven_build:
   stage: build
+  # this is gitlab runner tag registered with gitlab server
   tags:
     - ci
   script:
