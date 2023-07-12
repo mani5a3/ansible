@@ -147,3 +147,78 @@ node {
        
    }
 }
+
+
+----------------------------------------------------------------------------------------------
+pipeline {
+	agent any
+	options {
+		buildDiscarder(logRotator(numToKeepStr: '3', artifactNumToKeepStr: '3'))
+	}
+	parameters {
+		choice(name: 'branchname', choices: ['master', 'mani_dev', 'test_dev'], description: 'select the branch name')
+		 booleanParam(name: 'skip_stage', defaultValue: false, description: 'set to true to skip the stage')
+	}
+	stages {
+		stage("clone") {
+			
+			steps {
+			    script {
+			        currentBuild.displayName = "declarative_${BUILD_NUMBER}"
+        			git branch: "${params.branchname}", url: 'https://github.com/mani5a3/game-of-life.git'
+			    }
+			}
+		}
+		stage("build") {
+			when {
+				expression {
+			     params.skip_stage != true
+				}
+			}
+			steps {
+			bat 'mvn package'
+			}
+		}
+		stage("approve for build") {
+			steps {
+			timeout(time:1, unit: 'MINUTES'){
+			input (
+				message: 'approval for maven build',
+				id:  'userInput',
+				submitter: 'raghu'
+			)
+			}
+		  }
+		}
+		stage("jfrog"){
+			steps {
+				script {
+                    def SERVER_ID = 'artifactory'
+                    def server = Artifactory.server SERVER_ID
+					def uploadfiles = """{
+					"files": [
+					{
+						"pattern": "gameoflife-web/target/*.war",
+						"target": "example-repo-local"
+					},
+					{
+						"pattern": "gameoflife-core/target/*.jar",
+						"target": "example-repo-local"
+					}
+					]
+					}"""
+					server.upload(uploadfiles)
+				}
+			}
+		}
+	}
+	post {
+		always {
+			emailext (
+				subject: 'jenkins pipeline notification',
+				body: '${BUILD_URL}',
+				to: 'manikantagaddam.outlook.com, sivakrishna5a35a3@gmail.com'
+			)
+		}
+	}
+}
