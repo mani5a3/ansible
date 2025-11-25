@@ -1,0 +1,42 @@
+Amazon Bedrock
+Amazon Rekognition
+Amazon Comprehend
+Amazon Textract
+Amazon Transcribe
+Amazon Polly
+Amazon SageMaker
+
+
+AI: Building machines which can think, learn act like human
+
+
+AI started with 
+           --> Rule based system (legacy) EX: Chatbots
+		   --> Experts Systems (legacy)
+	
+
+Machine learning is modern form of Artificial Intelligence
+          --> statistical machine learning
+		  --> Deep learning 
+                   --> Neural networks
+                   --> Generative AI		
+				   
+Generative AI: Below are core models of Generative AI
+         --> LLM Models
+		         --> Pretraining
+				 --> fine tuning
+				 --> prompting
+				 --> Reinforcement learning with human feedbacks
+		 --> Text to images models
+		 --> Text to video models
+		 
+NLP: Train the model with different languages
+
+Computer vision: That enables machines to see, interpret, and understand visual information from the world—just like humans do, but using algorithms instead of eyes and a brain.
+          ex: Camera, screenshots, CCTV, medical scans
+
+Robotics
+
+AI agents: LLM Talks , AI agents acts
+
+
