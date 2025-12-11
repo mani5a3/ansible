@@ -1,3 +1,9 @@
+set_fact example:
+- name: Creating list and dictionary variables using 'shorthand' YAML 
+ansible.builtin.set_fact: 
+  two_dict: {'something': here2, 'other': somewhere} 
+  two_list: [1,2,3]
+
 email_notify.py
 ansible-config dump | grep -i callback
 
