@@ -1,0 +1,93 @@
+email_notify.py
+ansible-config dump | grep -i callback
+
+Ansible triggers callback plugins during events like:
+
+Task start
+Task success
+Task failure
+Play start
+Play end
+
+
+Plugin Name	Purpose
+default	Standard Ansible output
+yaml	Clean YAML-style output
+json	JSON formatted output
+minimal	Very small output
+timer	Shows execution time
+profile_tasks	Shows time taken per task
+slack	Sends results to Slack
+mail	Sends email notifications
+
+
+[defaults]
+callback_plugins = /home/master/playbooks/callback_plugins
+callbacks_enabled = email_notify,timer,profile_tasks
+load_callback_plugins = True
+stdout_callback = default
+
+
+from ansible.plugins.callback import CallbackBase
+import smtplib
+from email.mime.text import MIMEText
+import datetime
+
+class CallbackModule(CallbackBase):
+    CALLBACK_VERSION = 2.0
+    CALLBACK_TYPE = 'notification'
+    CALLBACK_NAME = 'email_notify'
+
+    # -------------------------------
+    # Configure your email details
+    # -------------------------------
+    SMTP_SERVER = "smtp.gmail.com"
+    SMTP_PORT = 587
+    SMTP_USER = "youremail@gmail.com"
+    SMTP_PASSWORD = ""  # Gmail App Password
+    MAIL_TO = "youremail@gmail.com"
+
+    # Utility to send email
+    def send_email(self, subject, body):
+        msg = MIMEText(body)
+        msg["Subject"] = subject
+        msg["From"] = self.SMTP_USER
+        msg["To"] = self.MAIL_TO
+
+        try:
+            server = smtplib.SMTP(self.SMTP_SERVER, self.SMTP_PORT)
+            server.starttls()
+            server.login(self.SMTP_USER, self.SMTP_PASSWORD)
+            server.sendmail(self.SMTP_USER, [self.MAIL_TO], msg.as_string())
+            server.quit()
+        except Exception as e:
+            self._display.display(f"Failed to send email: {e}")
+
+    # Utility to get timestamp
+    def _timestamp(self):
+        return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    # -------------------------------
+    # Task success
+    # -------------------------------
+    def v2_runner_on_ok(self, result):
+        host = result._host.get_name()
+        task = result.task_name
+        body = f"[{self._timestamp()}] SUCCESS on {host}\nTask: {task}"
+        self.send_email("Ansible Task SUCCESS", body)
+
+    # -------------------------------
+    # Task failure
+    # -------------------------------
+    def v2_runner_on_failed(self, result, ignore_errors=False):
+        host = result._host.get_name()
+        task = result.task_name
+        body = f"[{self._timestamp()}] FAILURE on {host}\nTask: {task}"
+        self.send_email("Ansible Task FAILED", body)
+
+    # -------------------------------
+    # Playbook completion
+    # -------------------------------
+    def v2_playbook_on_stats(self, stats):
+        body = f"[{self._timestamp()}] Playbook completed successfully."
+        self.send_email("Ansible Playbook Completed", body)
