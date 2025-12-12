@@ -1,0 +1,68 @@
+create.yml – Creates the test instance(s) (e.g., Docker containers).
+converge.yml – Applies your Ansible role to the created instance(s).
+verify.yml – Runs tests/validations to verify the role’s behavior.
+destroy.yml – Destroys/removes the test instance(s).
+molecule.yml – Main scenario configuration defining driver, platforms, and settings.
+
+molecule create – Creates the test environment (Docker containers/VMs).
+molecule converge – Applies your Ansible role to the created instance(s).
+molecule verify – Runs tests to validate the role’s outcome.
+molecule destroy – Deletes the test environment.
+molecule test – Runs the full workflow: destroy → create → converge → verify → destroy.
+
+sudo apt update
+sudo apt install -y docker.io
+sudo systemctl enable --now docker
+sudo usermod -aG docker $USER  # optional, to run docker without sudo
+
+python3 -m venv venv
+source venv/bin/activate
+pip install molecule molecule-plugins[docker]
+
+or
+
+sudo apt install pipx -y
+pipx ensurepath
+pipx install molecule
+pipx install --include-deps molecule-docker
+pipx inject molecule molecule-docker
+ansible-galaxy init myrole
+cd myrole
+molecule init scenario --driver-name docker
+
+meta/main.yml:
+
+galaxy_info:
+  author: your_name
+  namespace: manikanta
+  role_name: myrole
+  description: Test role
+  license: MIT
+  min_ansible_version: "2.9"
+
+roles:
+  - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"
+
+converge.yml:
+
+---
+driver:
+  name: docker
+
+platforms:
+  - name: ubuntu-instance
+    image: ubuntu:22.04
+    privileged: true
+    command: /sbin/init
+    environment:
+      DEBIAN_FRONTEND: noninteractive
+
+provisioner:
+  name: ansible
+  playbooks:
+    converge: converge.yml
+
+verifier:
+  name: ansible
+
+
