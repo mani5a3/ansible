@@ -17,6 +17,7 @@ sudo usermod -aG docker $USER  # optional, to run docker without sudo
 
 python3 -m venv venv
 source venv/bin/activate
+pip install "molecule[docker]" ansible
 pip install molecule molecule-plugins[docker]
 
 or
@@ -28,9 +29,14 @@ pipx install --include-deps molecule-docker
 pipx inject molecule molecule-docker
 ansible-galaxy init myrole
 cd myrole
-molecule init scenario --driver-name docker
+molecule init scenario
 
-meta/main.yml:
+meta/main.yml: The namespace is the owner of the role or collection when published to Ansible Galaxy.
+galaxy_namespace.role_name
+    namespace: manikanta
+    role_name: myrole
+to call role: manikanta.myrole
+
 
 galaxy_info:
   author: your_name
@@ -40,11 +46,14 @@ galaxy_info:
   license: MIT
   min_ansible_version: "2.9"
 
-roles:
-  - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"
-
 converge.yml:
+- name: Converge
+  hosts: all
+  become: true
+  roles:
+    - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"
 
+molecule.yml:
 ---
 driver:
   name: docker
@@ -61,6 +70,10 @@ provisioner:
   name: ansible
   playbooks:
     converge: converge.yml
+  inventory:
+    hosts:
+      ubuntu-instance:
+        ansible_user: root
 
 verifier:
   name: ansible
